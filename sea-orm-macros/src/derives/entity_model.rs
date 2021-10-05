@@ -69,6 +69,7 @@ pub fn expand_derive_entity_model(data: Data, attrs: Vec<Attribute>) -> syn::Res
                     let mut indexed = false;
                     let mut ignore = false;
                     let mut unique = false;
+                    let mut deleted_at = false;
                     let mut sql_type = None;
                     let mut column_name = None;
                     let mut enum_name = None;
@@ -155,6 +156,8 @@ pub fn expand_derive_entity_model(data: Data, attrs: Vec<Attribute>) -> syn::Res
                                                 indexed = true;
                                             } else if name == "unique" {
                                                 unique = true;
+                                            } else if name == "deleted_at" {
+                                                deleted_at = true;
                                             }
                                         }
                                     }
@@ -241,6 +244,9 @@ pub fn expand_derive_entity_model(data: Data, attrs: Vec<Attribute>) -> syn::Res
                     }
                     if unique {
                         match_row = quote! { #match_row.unique() };
+                    }
+                    if deleted_at {
+                        match_row = quote! { #match_row.deleted_at() };
                     }
                     if let Some(default_value) = default_value {
                         match_row = quote! { #match_row.default_value(#default_value) };

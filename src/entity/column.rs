@@ -8,6 +8,7 @@ pub struct ColumnDef {
     pub(crate) null: bool,
     pub(crate) unique: bool,
     pub(crate) indexed: bool,
+    pub(crate) deleted_at: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -239,6 +240,7 @@ impl ColumnType {
             null: false,
             unique: false,
             indexed: false,
+            deleted_at: false
         }
     }
 }
@@ -260,6 +262,13 @@ impl ColumnDef {
 
     pub fn indexed(mut self) -> Self {
         self.indexed = true;
+        self
+    }
+
+    pub fn deleted_at(mut self) -> Self {
+        self.null = true;
+        self.indexed = true;
+        self.deleted_at = true;
         self
     }
 }
